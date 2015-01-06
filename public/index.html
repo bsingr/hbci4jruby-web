@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HBCI Verify</title>
+  <style type="text/css">
+  * {
+    line-height: 1.5em;
+    font-family: Courier, Arial;
+  }
+  label {
+    width: 300px;
+    display: inline-block;
+  }
+  input {
+    width: 300px;
+    display: inline-block;
+  }
+  li {
+    font-size: 0.8em;
+    color: #666;
+  }
+  </style>
+  <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+  <script>
+  $(document).ready(function(){
+    $('form').submit(function(ev){
+      var values = $(this).serializeArray(),
+          data = {};
+      values.forEach(function(obj){
+        data[obj.name] = obj.value;
+      });
+      $.ajax({
+        method: 'post',
+        url: location.origin+'/turnovers',
+        data: JSON.stringify({
+          start_date: (new Date()).getFullYear()-1,
+          end_date: (new Date()).getFullYear(),
+          banking_passport: data
+        }),
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        complete: function(res){
+          renderTurnovers(res.responseJSON)
+        }
+      });
+      ev.preventDefault();
+    });
+  });
+
+  function renderTurnovers(turnoversRaw, error) {
+    var rows = [];
+    if (turnoversRaw) {
+      turnoversRaw.forEach(function(turnoverRaw){
+        rows.push('<li>'+turnoverRaw+'</li>');
+      });
+      $('ul').html(rows.join("\n"));
+    } else {
+      $('ul').html('<li>Error</li>')
+    }
+  }
+  </script>
+</head>
+<body>
+<form>
+  <label>hbci_version</label>
+  <input type="text" name="hbci_version" value="300" />
+  <br/>
+
+  <label>host</label>
+  <input type="text" name="host" value="fints.comdirect.de/fint" />
+  <br/>
+
+  <label>port</label>
+  <input type="text" name="port" value="443" />
+  <br/>
+
+  <label>filter</label>
+  <input type="text" name="filter" value="Base64" />
+  <br/>
+
+  <label>country_code</label>
+  <input type="text" name="country_code" value="DE" />
+  <br/>
+
+  <label>bank_number (BLZ)</label>
+  <input type="text" name="bank_number" value="" />
+  <br/>
+
+  <label>customer_id (Login)</label>
+  <input type="text" name="customer_id" value="" />
+  <br/>
+
+  <label>user_id (Login)</label>
+  <input type="text" name="user_id" value="" />
+  <br/>
+
+  <label>account_number (Konto)</label>
+  <input type="text" name="account_number" value="" />
+  <br/>
+
+  <label>pin</label>
+  <input type="text" name="pin" value="" />
+  <br/>
+
+  <label></label>
+  <input type="submit" value="Verify" />
+  <br/>
+</form>
+<ul><ul>
+</body>
+</html>

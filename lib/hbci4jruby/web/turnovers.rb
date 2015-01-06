@@ -1,7 +1,7 @@
 module Hbci4jruby
   module Web
-    class Turnover < ::Sinatra::Base
-      get('/turnover') do
+    class Turnovers < ::Sinatra::Base
+      post('/turnovers') do
         begin
           data = ::JSON.parse request.body.read
           halt 'Please provide banking_passport' unless data["banking_passport"]
