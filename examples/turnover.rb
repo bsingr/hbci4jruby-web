@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'httparty'
-response = HTTParty.get('http://localhost:4567/turnover', {
+response = HTTParty.post('http://localhost:4567/turnovers  ', {
   :body => {
     "start_date"       => 2013,
     "end_date"         => 2015,
